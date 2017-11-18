@@ -11,11 +11,13 @@ Have a look in the "options for target" to see how linker, preprocessor etc is c
 Great stuff, i learned new things ;-)
 
 **How to use**
+
 Open a Putty serial connection on your local com port that the tiva board is assigned and configure it for 115200, 1-8-1.
 The connect pins PA4 and PA5. 
 If you dont see anything immediately in putty, hit the reset switch on the tiva board :-)
 
 **From the TI example**
+
 This example shows how to configure the SSI0 as SPI Master. The code willsend three characters on the master Tx then polls the receive FIFO until 3 characters are received on the master Rx.
 
 This example uses the following peripherals and I/O signals. You must review these and change as needed for your own board:
@@ -33,5 +35,6 @@ The following UART signals are configured only for displaying console messages f
 - UART0TX - PA1
 
 **Todo**
+
 Configure to send 3x32 bits as required by the APA102 protocol:
 https://cpldcpu.files.wordpress.com/2014/08/apa-102-super-led-specifications-2013-en.pdf
