@@ -1,0 +1,16 @@
+.\objects\main.o: projectFiles\main.c
+.\objects\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
+.\objects\main.o: projectFiles\inc/hw_memmap.h
+.\objects\main.o: projectFiles\inc/hw_types.h
+.\objects\main.o: projectFiles\driverlib/debug.h
+.\objects\main.o: projectFiles\driverlib/fpu.h
+.\objects\main.o: projectFiles\driverlib/gpio.h
+.\objects\main.o: projectFiles\driverlib/pin_map.h
+.\objects\main.o: projectFiles\driverlib/rom.h
+.\objects\main.o: projectFiles\driverlib/sysctl.h
+.\objects\main.o: projectFiles\driverlib/uart.h
+.\objects\main.o: projectFiles\utils/uartstdio.h
+.\objects\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdarg.h
+.\objects\main.o: projectFiles\driverlib/ssi.h
+.\objects\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h

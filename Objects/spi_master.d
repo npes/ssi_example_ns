@@ -1,0 +1,16 @@
+.\objects\spi_master.o: projectFiles\spi_master.c
+.\objects\spi_master.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\spi_master.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
+.\objects\spi_master.o: projectFiles\inc/hw_memmap.h
+.\objects\spi_master.o: projectFiles\inc/hw_types.h
+.\objects\spi_master.o: projectFiles\driverlib/debug.h
+.\objects\spi_master.o: projectFiles\driverlib/fpu.h
+.\objects\spi_master.o: projectFiles\driverlib/gpio.h
+.\objects\spi_master.o: projectFiles\driverlib/pin_map.h
+.\objects\spi_master.o: projectFiles\driverlib/rom.h
+.\objects\spi_master.o: projectFiles\driverlib/sysctl.h
+.\objects\spi_master.o: projectFiles\driverlib/uart.h
+.\objects\spi_master.o: projectFiles\utils/uartstdio.h
+.\objects\spi_master.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdarg.h
+.\objects\spi_master.o: projectFiles\driverlib/ssi.h
+.\objects\spi_master.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
