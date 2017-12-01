@@ -26,15 +26,16 @@ Project File Date:  11/18/2017
 
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 5 (build 528)', folder: 'C:\Keil_v5\ARM\ARMCC\Bin'
-Rebuild target 'APA102_SPI'
+Build target 'APA102_SPI'
 compiling main.c...
-compiling uart.c...
-assembling startup_TM4C123.s...
-compiling uartstdio.c...
-compiling system_TM4C123.c...
+projectFiles\main.c(298): warning:  #111-D: statement is unreachable
+      return(0);
+projectFiles\main.c(163): warning:  #177-D: variable "pui32DataTx"  was declared but never referenced
+      uint32_t pui32DataTx[NUM_SSI_DATA];
+projectFiles\main.c: 2 warnings, 0 errors
 linking...
-Program Size: Code=2484 RO-data=1848 RW-data=8 ZI-data=512  
-".\Objects\ssi_Example_ns.axf" - 0 Error(s), 0 Warning(s).
+Program Size: Code=3288 RO-data=1848 RW-data=8 ZI-data=512  
+".\Objects\ssi_Example_ns.axf" - 0 Error(s), 2 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -58,12 +59,12 @@ Package Vendor: Keil
 <h2>Collection of Component Files used:</h2>
 
    * Component: Keil::Device:Startup:1.0.1
-      Source file:   Device\Source\ARM\startup_TM4C123.s
       Include file:  Device\Include\TM4C123\TM4C123.h
       Source file:   Device\Source\system_TM4C123.c
+      Source file:   Device\Source\ARM\startup_TM4C123.s
 
    * Component: ARM::CMSIS:CORE:5.0.1
-Build Time Elapsed:  00:00:01
+Build Time Elapsed:  00:00:02
 </pre>
 </body>
 </html>

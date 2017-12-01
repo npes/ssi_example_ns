@@ -52,6 +52,8 @@
 #include "utils/uartstdio.h"
 #include "driverlib/ssi.h"
 #include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 
 
 
@@ -92,7 +94,7 @@
 // Number of bytes to send and receive.
 //
 //*****************************************************************************
-#define NUM_SSI_DATA            3
+#define NUM_SSI_DATA            4
 
 //*****************************************************************************
 //
@@ -145,8 +147,12 @@ void InitConsole(void)
 // done using the polling method.
 //
 //*****************************************************************************
-int
-main(void)
+void SendSPIdata (uint32_t ledArray [45], uint32_t ui32Index);
+void fadeBlue (uint32_t ui32Index);
+void fadeGreen (uint32_t ui32Index);
+void fadeRed (uint32_t ui32Index);
+	
+int main(void)
 {
 #if defined(TARGET_IS_TM4C129_RA0) ||                                         \
     defined(TARGET_IS_TM4C129_RA1) ||                                         \
@@ -170,8 +176,8 @@ main(void)
                                        SYSCTL_OSC_MAIN |
                                        SYSCTL_USE_OSC), 25000000);
 #else
-//    SysCtlClockSet(SYSCTL_SYSDIV_1 | SYSCTL_USE_OSC | SYSCTL_OSC_MAIN |
-//                   SYSCTL_XTAL_16MHZ);
+      SysCtlClockSet(SYSCTL_SYSDIV_1 | SYSCTL_USE_OSC | SYSCTL_OSC_MAIN |
+                     SYSCTL_XTAL_16MHZ);
 			ROM_SysCtlClockSet(SYSCTL_SYSDIV_4 | SYSCTL_USE_PLL | SYSCTL_XTAL_16MHZ |
                        SYSCTL_OSC_MAIN);
 #endif
@@ -242,7 +248,7 @@ main(void)
                        SSI_MODE_MASTER, 1000000, 8);
 #else
     SSIConfigSetExpClk(SSI0_BASE, SysCtlClockGet(), SSI_FRF_MOTO_MODE_0,
-                       SSI_MODE_MASTER, 1000000, 8);
+                       SSI_MODE_MASTER, 10000000, 8);
 #endif
 
     //
@@ -263,73 +269,178 @@ main(void)
     {
     }
 
-    //
+		//static const uint32_t array1[45] = {0x00, 0x00, 0x00, 0x00, 0xe2, 0xff, 0x00, 0x00, 0xe2, 0x00, 0xff, 0x00, 0xe2, 0x00, 0x00, 0xff, 0xe2, 0xff, 0x00, 0x00, 0xe2, 0x00, 0xff, 0x00, 0xe2, 0x00, 0x00, 0xff, 0xe2, 0xff, 0x00, 0x00, 0xe2, 0x00, 0xff, 0x00, 0xe2, 0x00, 0x00, 0xff, 0xe2, 0xff, 0x00, 0x00, 0x00};
+    //static const uint32_t array2[45] = {0x00, 0x00, 0x00, 0x00, 0xe2, 0x00, 0xff, 0x00, 0xe2, 0xff, 0x00, 0x00, 0xe2, 0x00, 0xff, 0x00, 0xe2, 0x00, 0x00, 0xff, 0xe2, 0xff, 0x00, 0x00, 0xe2, 0x00, 0xff, 0x00, 0xe2, 0x00, 0x00, 0xff, 0xe2, 0xff, 0x00, 0x00, 0xe2, 0x00, 0xff, 0x00, 0xe2, 0x00, 0x00, 0xff, 0x00};
+			//
     // Initialize the data to send.
     //
-    pui32DataTx[0] = 's';
-    pui32DataTx[1] = 'p';
-    pui32DataTx[2] = 'i';
 
-    //
-    // Display indication that the SSI is transmitting data.
-    //
-    UARTprintf("Sent:\n  ");
+			//srand((unsigned)time(NULL));
+//		memcpy (pui32DataTx, array1, sizeof(array1));
+//		SendSPIdata(pui32DataTx, ui32Index);
+//    SysCtlDelay(2500000);
+//		memcpy (pui32DataTx, array2, sizeof(array2));
+//    SendSPIdata(pui32DataTx, ui32Index);
+//		SysCtlDelay(2500000);
+	for(uint32_t i=0; i<4; i++)
+	{
+		uint32_t bufferA[4] = {0x00, 0x00, 0x00, 0x00};
+		SendSPIdata(bufferA, ui32Index);
+	}
+	
+while(1){
+	fadeBlue(ui32Index);
+	fadeGreen(ui32Index);
+	fadeRed(ui32Index);
+}		
 
-    //
-    // Send 3 bytes of data.
-    //
-    for(ui32Index = 0; ui32Index < NUM_SSI_DATA; ui32Index++)
-    {
-        //
-        // Display the data that SSI is transferring.
-        //
-        UARTprintf("'%c' ", pui32DataTx[ui32Index]);
-
-        //
-        // Send the data using the "blocking" put function.  This function
-        // will wait until there is room in the send FIFO before returning.
-        // This allows you to assure that all the data you send makes it into
-        // the send FIFO.
-        //
-        SSIDataPut(SSI0_BASE, pui32DataTx[ui32Index]);
-    }
-
-    //
-    // Wait until SSI0 is done transferring all the data in the transmit FIFO.
-    //
-    while(SSIBusy(SSI0_BASE))
-    {
-    }
-
-    //
-    // Display indication that the SSI is receiving data.
-    //
-    UARTprintf("\nReceived:\n  ");
-
-    //
-    // Receive 3 bytes of data.
-    //
-    for(ui32Index = 0; ui32Index < NUM_SSI_DATA; ui32Index++)
-    {
-        //
-        // Receive the data using the "blocking" Get function. This function
-        // will wait until there is data in the receive FIFO before returning.
-        //
-        SSIDataGet(SSI0_BASE, &pui32DataRx[ui32Index]);
-
-        //
-        // Since we are using 8-bit data, mask off the MSB.
-        //
-        pui32DataRx[ui32Index] &= 0x00FF;
-
-        //
-        // Display the data that SSI0 received.
-        //
-        UARTprintf("'%c' ", pui32DataRx[ui32Index]);
-    }
-
-    //
     // Return no errors
-    //
     return(0);
 }
+
+void SendSPIdata (uint32_t ledArray [4], uint32_t ui32Index)
+{
+	for(ui32Index = 0; ui32Index < NUM_SSI_DATA; ui32Index++)
+  {        
+		// Send the data using the "blocking" put function.  This function
+		// will wait until there is room in the send FIFO before returning.
+		// This allows you to assure that all the data you send makes it into
+		// the send FIFO.
+		//
+		SSIDataPut(SSI0_BASE, ledArray[ui32Index]);
+  }
+			while(SSIBusy(SSI0_BASE))
+			{
+			}
+}
+
+void fadeBlue (uint32_t ui32Index){
+	uint8_t number = 0x00;
+	uint32_t bufferB[4];
+		for(uint32_t k=0; k<255; k++){	
+		number++;
+		for(uint32_t i=0; i<10; i++){
+			for(uint32_t j=0; j<4; j++)
+			{
+				
+				bufferB[0] = 0xe2;
+				bufferB[1] = number;
+				bufferB[2] = 0x00;
+				bufferB[3] = 0x00;
+				SendSPIdata(bufferB, ui32Index);
+			}
+		}			
+		for(uint32_t i=0; i<4; i++){
+		uint32_t bufferA[4] = {0x00, 0x00, 0x00, 0x00};
+		SendSPIdata(bufferA, ui32Index);
+		}
+	SysCtlDelay(100000);			
+	}
+	for(uint32_t k=0; k<255; k++){	
+		number--;
+		for(uint32_t i=0; i<10; i++){
+			for(uint32_t j=0; j<4; j++)
+			{
+				
+				bufferB[0] = 0xe2;
+				bufferB[1] = number;
+				bufferB[2] = 0x00;
+				bufferB[3] = 0x00;
+				SendSPIdata(bufferB, ui32Index);
+			}
+		}			
+		for(uint32_t i=0; i<4; i++){
+		uint32_t bufferA[4] = {0x00, 0x00, 0x00, 0x00};
+		SendSPIdata(bufferA, ui32Index);
+		}
+	SysCtlDelay(100000);			
+	}
+}
+
+void fadeGreen (uint32_t ui32Index){
+	uint8_t number = 0x00;
+	uint32_t bufferB[4];
+		for(uint32_t k=0; k<255; k++){	
+		number++;
+		for(uint32_t i=0; i<10; i++){
+			for(uint32_t j=0; j<4; j++)
+			{
+				
+				bufferB[0] = 0xe2;
+				bufferB[1] = 0x00;
+				bufferB[2] = number;
+				bufferB[3] = 0x00;
+				SendSPIdata(bufferB, ui32Index);
+			}
+		}			
+		for(uint32_t i=0; i<4; i++){
+		uint32_t bufferA[4] = {0x00, 0x00, 0x00, 0x00};
+		SendSPIdata(bufferA, ui32Index);
+		}
+	SysCtlDelay(100000);			
+	}
+	for(uint32_t k=0; k<255; k++){	
+		number--;
+		for(uint32_t i=0; i<10; i++){
+			for(uint32_t j=0; j<4; j++)
+			{
+				
+				bufferB[0] = 0xe2;
+				bufferB[1] = 0x00;
+				bufferB[2] = number;
+				bufferB[3] = 0x00;
+				SendSPIdata(bufferB, ui32Index);
+			}
+		}			
+		for(uint32_t i=0; i<4; i++){
+		uint32_t bufferA[4] = {0x00, 0x00, 0x00, 0x00};
+		SendSPIdata(bufferA, ui32Index);
+		}
+	SysCtlDelay(100000);			
+	}
+}
+
+void fadeRed (uint32_t ui32Index){
+	uint8_t number = 0x00;
+	uint32_t bufferB[4];
+		for(uint32_t k=0; k<255; k++){	
+		number++;
+		for(uint32_t i=0; i<10; i++){
+			for(uint32_t j=0; j<4; j++)
+			{
+				
+				bufferB[0] = 0xe2;
+				bufferB[1] = 0x00;
+				bufferB[2] = 0x00;
+				bufferB[3] = number;
+				SendSPIdata(bufferB, ui32Index);
+			}
+		}			
+		for(uint32_t i=0; i<4; i++){
+		uint32_t bufferA[4] = {0x00, 0x00, 0x00, 0x00};
+		SendSPIdata(bufferA, ui32Index);
+		}
+	SysCtlDelay(100000);			
+	}
+	for(uint32_t k=0; k<255; k++){	
+		number--;
+		for(uint32_t i=0; i<10; i++){
+			for(uint32_t j=0; j<4; j++)
+			{
+				
+				bufferB[0] = 0xe2;
+				bufferB[1] = 0x00;
+				bufferB[2] = 0x00;
+				bufferB[3] = number;
+				SendSPIdata(bufferB, ui32Index);
+			}
+		}			
+		for(uint32_t i=0; i<4; i++){
+		uint32_t bufferA[4] = {0x00, 0x00, 0x00, 0x00};
+		SendSPIdata(bufferA, ui32Index);
+		}
+	SysCtlDelay(100000);			
+	}
+}
+	
+
